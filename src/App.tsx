@@ -8,7 +8,7 @@ import {
   Settings, Plug, Globe, Cloud, Zap, Shield,
   Mail, Phone, Linkedin, Github, ArrowRight, FileText, Menu, X
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
@@ -449,6 +449,29 @@ const Research = () => {
 };
 
 const Contact = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) return;
+    
+    setStatus('submitting');
+    
+    // Simulate a brief loading state for UX
+    setTimeout(() => {
+      const subject = encodeURIComponent(`New Project Inquiry from ${formData.name}`);
+      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+      window.location.href = `mailto:yassersedira20@gmail.com?subject=${subject}&body=${body}`;
+      
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      
+      // Reset success message after a few seconds
+      setTimeout(() => setStatus('idle'), 5000);
+    }, 600);
+  };
+
   return (
     <section id="contact" className="py-28 px-8 md:px-16 bg-cream text-black">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -491,10 +514,10 @@ const Contact = () => {
                 <div className="text-xs text-[#888] mt-0.5">LinkedIn</div>
               </div>
             </a>
-            <a href="https://github.com/yassersedira" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-black no-underline font-medium p-4 border-2 border-black/10 rounded-xl transition-all hover:border-[#5a6e00] hover:bg-[#5a6e00]/5 hover:translate-x-1">
+            <a href="https://github.com/SediraYasser20" target="_blank" rel="noreferrer" className="group flex items-center gap-4 text-black no-underline font-medium p-4 border-2 border-black/10 rounded-xl transition-all hover:border-[#5a6e00] hover:bg-[#5a6e00]/5 hover:translate-x-1">
               <Github className="w-5 h-5 text-[#5a6e00]" />
               <div>
-                <div className="text-sm">github.com/yassersedira</div>
+                <div className="text-sm">github.com/SediraYasser20</div>
                 <div className="text-xs text-[#888] mt-0.5">GitHub</div>
               </div>
             </a>
@@ -508,22 +531,52 @@ const Contact = () => {
           variants={fadeInUp}
           className="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-black/5"
         >
-          <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold tracking-widest uppercase text-[#666]">Your name</label>
-              <input type="text" placeholder="e.g. Karim Benali" className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00]" />
+              <input 
+                type="text" 
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                placeholder="e.g. Karim Benali" 
+                className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00]" 
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold tracking-widest uppercase text-[#666]">Email address</label>
-              <input type="email" placeholder="you@company.com" className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00]" />
+              <input 
+                type="email" 
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                placeholder="you@company.com" 
+                className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00]" 
+              />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold tracking-widest uppercase text-[#666]">What do you need?</label>
-              <textarea rows={4} placeholder="Briefly describe your project — ERP, WordPress plugin, website, or something else..." className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00] resize-none" />
+              <textarea 
+                rows={4} 
+                required
+                value={formData.message}
+                onChange={(e) => setFormData({...formData, message: e.target.value})}
+                placeholder="Briefly describe your project — ERP, WordPress plugin, website, or something else..." 
+                className="bg-white border-2 border-black/10 rounded-lg px-4 py-3 text-sm text-black transition-colors focus:outline-none focus:border-[#5a6e00] resize-none" 
+              />
             </div>
-            <button className="bg-black text-white px-8 py-4 rounded-full font-bold text-sm transition-all hover:bg-[#222] hover:-translate-y-0.5 self-start mt-2">
-              Send message →
+            <button 
+              type="submit"
+              disabled={status === 'submitting'}
+              className="bg-black text-white px-8 py-4 rounded-full font-bold text-sm transition-all hover:bg-[#222] hover:-translate-y-0.5 self-start mt-2 disabled:opacity-70 disabled:hover:translate-y-0"
+            >
+              {status === 'submitting' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Send message →'}
             </button>
+            {status === 'success' && (
+              <p className="text-sm text-[#5a6e00] font-medium mt-2">
+                Opening your email client...
+              </p>
+            )}
           </form>
         </motion.div>
       </div>
