@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+
+  --color-black: #0a0a0a;
+  --color-white: #f5f2ec;
+  --color-cream: #f0ead8;
+  --color-accent: #c8ff00;
+  --color-accent-hover: #d4ff33;
+  --color-accent2: #ff5c2b;
+  --color-mid: #2a2a2a;
+  --color-muted: #888888;
+  --color-border: rgba(245, 242, 236, 0.1);
+}
+
+body {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+.animate-blink {
+  animation: blink 1.5s infinite;
+}
